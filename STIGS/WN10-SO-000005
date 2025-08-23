@@ -1,0 +1,39 @@
+<#
+.SYNOPSIS
+    This PowerShell script disables the built-in Administrator account.
+
+.NOTES
+    Author          : Harrison Knapp
+    GitHub          : https://github.com/hknapp518/hknapp518
+    Date Created    : 2025-08-23
+    Last Modified   : 2025-08-23
+    Version         : 1.1
+    STIG-ID         : WN10-SO-000005
+#>
+
+# Ensure script is run as Administrator
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Error "This script must be run as Administrator."
+    exit 1
+}
+
+# Ensure running on PS 5.1 or later
+if ($PSVersionTable.PSVersion.Major -lt 5) {
+    Write-Error "This script requires PowerShell 5.1 or later."
+    exit 1
+}
+
+# Find the built-in Administrator account by its well-known RID 500
+$admin = Get-LocalUser | Where-Object { $_.SID.Value -like '*-500' }
+
+if ($null -eq $admin) {
+    Write-Error "Built-in Administrator account not found."
+    exit 1
+}
+
+if ($admin.Enabled) {
+    Disable-LocalUser -Name $admin.Name
+    Write-Output "Built-in Administrator account '$($admin.Name)' has been disabled."
+} else {
+    Write-Output "Built-in Administrator account '$($admin.Name)' is already disabled."
+}
