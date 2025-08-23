@@ -1,0 +1,45 @@
+<#
+.SYNOPSIS
+    Ensures PowerShell Script Block Logging is enabled (STIG: WN10-CC-000326).
+
+.DESCRIPTION
+    Configures registry to enable script block logging:
+    HKLM\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging\EnableScriptBlockLogging = 1
+
+.NOTES
+    Author          : Harrison Knapp
+    GitHub          : https://github.com/hknapp518/hknapp518
+    Date Created    : 2025-08-23
+    Last Modified   : 2025-08-23
+    Version         : 1.0
+    STIG-ID         : WN10-AU-000505
+#>
+
+# Ensure script runs as Administrator
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Error "This script must be run as Administrator."
+    exit 1
+}
+
+# Registry path and value
+$RegPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"
+$ValueName = "EnableScriptBlockLogging"
+$ExpectedValue = 1
+
+# Ensure registry path exists
+if (-not (Test-Path $RegPath)) {
+    Write-Output "Registry path not found. Creating: $RegPath"
+    New-Item -Path $RegPath -Force | Out-Null
+}
+
+# Get current value
+$currentValue = Get-ItemProperty -Path $RegPath -Name $ValueName -ErrorAction SilentlyContinue | Select-Object -ExpandProperty $ValueName -ErrorAction SilentlyContinue
+
+# Set if missing or incorrect
+if ($null -eq $currentValue -or $currentValue -ne $ExpectedValue) {
+    Write-Output "Setting '$ValueName' to $ExpectedValue..."
+    New-ItemProperty -Path $RegPath -Name $ValueName -Value $ExpectedValue -PropertyType DWord -Force | Out-Null
+    Write-Output "Registry value updated: $ValueName = $ExpectedValue"
+} else {
+    Write-Output "Registry value already set correctly: $ValueName = $ExpectedValue"
+}
