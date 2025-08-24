@@ -1,0 +1,32 @@
+<#
+.SYNOPSIS
+  Remediates DISA STIG WN10-CC-000360 for WinRM Client Digest Authentication.
+
+.DESCRIPTION
+  Configures the policy value for:
+  Computer Configuration >> Administrative Templates >> Windows Components >> Windows Remote Management (WinRM) >> WinRM Client >> "Disallow Digest authentication"
+  to "Enabled".
+#>
+
+# Define registry path and value
+$RegPath  = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
+$ValueName = "AllowDigest"
+$DesiredValue = 0  # 0 = Disallow (STIG Compliant), 1 = Allow
+
+# Check if the key exists, if not, create it
+if (-not (Test-Path $RegPath)) {
+    Write-Output "Registry path not found. Creating: $RegPath"
+    New-Item -Path $RegPath -Force | Out-Null
+}
+
+# Check current value
+$currentValue = (Get-ItemProperty -Path $RegPath -Name $ValueName -ErrorAction SilentlyContinue).$ValueName
+
+if ($currentValue -ne $DesiredValue) {
+    Write-Output "Setting $ValueName to $DesiredValue"
+    New-ItemProperty -Path $RegPath -Name $ValueName -Value $DesiredValue -PropertyType DWord -Force | Out-Null
+} else {
+    Write-Output "$ValueName is already set to $DesiredValue. No action needed."
+}
+
+Write-Output "DISA STIG remediation for WinRM Client Digest Authentication complete."
