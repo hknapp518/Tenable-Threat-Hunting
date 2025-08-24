@@ -6,7 +6,13 @@
   Ensures the registry value NoAutorun is set to 1 under:
   HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
 #>
-
+.NOTES
+    Author          : Harrison Knapp
+    GitHub          : https://github.com/hknapp518/hknapp518
+    Date Created    : 2025-08-24
+    Last Modified   : 2025-08-24
+    Version         : 1.0
+    STIG-ID         : WN10-CC-000185
 # Define registry path and value
 $RegPath  = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 $ValueName = "NoAutorun"
