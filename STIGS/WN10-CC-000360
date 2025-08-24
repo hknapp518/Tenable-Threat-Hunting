@@ -7,7 +7,15 @@
   Computer Configuration >> Administrative Templates >> Windows Components >> Windows Remote Management (WinRM) >> WinRM Client >> "Disallow Digest authentication"
   to "Enabled".
 #>
-
+.NOTES
+    Author          : Harrison Knapp
+    GitHub          : https://github.com/hknapp518/hknapp518
+    Date Created    : 2025-08-22
+    Last Modified   : 2025-08-22
+    Version         : 1.0
+    CVEs            : N/A
+    Plugin IDs      : N/A
+    STIG-ID         : WN10-CC-000360
 # Define registry path and value
 $RegPath  = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client"
 $ValueName = "AllowDigest"
