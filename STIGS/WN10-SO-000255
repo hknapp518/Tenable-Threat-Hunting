@@ -1,0 +1,31 @@
+<#
+.SYNOPSIS
+  Remediates STIG WN10-SO-000255 by configuring UAC behavior for standard users.
+
+.DESCRIPTION
+  Ensures the registry value ConsentPromptBehaviorUser is set to 0 under:
+  HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+#>
+
+# Define registry path and value
+$RegPath  = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+$ValueName = "ConsentPromptBehaviorUser"
+$DesiredValue = 0
+
+# Check if the key exists, if not, create it
+if (-not (Test-Path $RegPath)) {
+    Write-Output "Registry path not found. Creating: $RegPath"
+    New-Item -Path $RegPath -Force | Out-Null
+}
+
+# Check current value
+$currentValue = (Get-ItemProperty -Path $RegPath -Name $ValueName -ErrorAction SilentlyContinue).$ValueName
+
+if ($currentValue -ne $DesiredValue) {
+    Write-Output "Setting $ValueName to $DesiredValue"
+    New-ItemProperty -Path $RegPath -Name $ValueName -Value $DesiredValue -PropertyType DWord -Force | Out-Null
+} else {
+    Write-Output "$ValueName is already set to $DesiredValue. No action needed."
+}
+
+Write-Output "STIG WN10-SO-000255 remediation complete."
