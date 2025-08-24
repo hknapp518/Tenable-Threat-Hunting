@@ -1,4 +1,19 @@
-# Requires Administrator
+<#
+.SYNOPSIS
+    Ensures Windows 10 systems must use a BitLocker PIN with a minimum length of six digits for pre-boot authentication (STIG: WN10-00-000032).
+
+.DESCRIPTION
+    Configures registry to enable script block logging:
+    HKLM\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging\EnableScriptBlockLogging = 1
+
+.NOTES
+    Author          : Harrison Knapp
+    GitHub          : https://github.com/hknapp518/hknapp518
+    Date Created    : 2025-08-24
+    Last Modified   : 2025-08-24
+    Version         : 1.0
+    STIG-ID         : WN10-00-000032
+#># Requires Administrator
 
 $RegPath = "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
 $RegName = "MinimumPIN"
