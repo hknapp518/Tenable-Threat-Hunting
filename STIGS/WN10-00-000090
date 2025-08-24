@@ -1,0 +1,29 @@
+# Requires Administrator
+
+# Get all local, enabled user accounts
+$users = Get-WmiObject Win32_UserAccount -Filter "LocalAccount='True' AND Disabled='False'"
+
+foreach ($user in $users) {
+    try {
+        # Skip built-in accounts (RID 500 = Administrator, RID 501 = Guest)
+        if ($user.SID -match '-500$' -or $user.SID -match '-501$') {
+            Write-Output "Skipping built-in account: $($user.Name)"
+            continue
+        }
+
+        # Get the ADSI object for the user
+        $adsi = [ADSI]"WinNT://$($env:COMPUTERNAME)/$($user.Name),user"
+
+        # Check if "Password never expires" is set
+        if ($adsi.UserFlags.Value -band 0x10000) {
+            # Clear the flag (0x10000 = DONT_EXPIRE_PASSWD)
+            $adsi.UserFlags.Value = $adsi.UserFlags.Value -bxor 0x10000
+            $adsi.SetInfo()
+            Write-Output "Updated account: $($user.Name) — Password now expires."
+        } else {
+            Write-Output "Account: $($user.Name) already configured correctly."
+        }
+    } catch {
+        Write-Warning "Failed to update account $($user.Name): $($_.Exception.Message)"
+    }
+}
