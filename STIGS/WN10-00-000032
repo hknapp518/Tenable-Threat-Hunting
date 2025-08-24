@@ -13,6 +13,11 @@
     Last Modified   : 2025-08-24
     Version         : 1.0
     STIG-ID         : WN10-00-000032
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
 #># Requires Administrator
 
 $RegPath = "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
