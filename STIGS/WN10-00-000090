@@ -12,7 +12,12 @@
     Date Created    : 2025-08-24
     Last Modified   : 2025-08-24
     Version         : 1.0
-    STIG-ID         : WN10-00-000090# Requires Administrator
+    STIG-ID         : WN10-00-000090# 
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
 
 # Get all local, enabled user accounts
 $users = Get-WmiObject Win32_UserAccount -Filter "LocalAccount='True' AND Disabled='False'"
