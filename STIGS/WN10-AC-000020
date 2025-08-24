@@ -4,6 +4,18 @@
 
 .DESCRIPTION
   Configures "Enforce password history" to 24 passwords remembered.
+.NOTES
+    Author          : Harrison Knapp
+    GitHub          : https://github.com/hknapp518/hknapp518
+    Date Created    : 2025-08-24
+    Last Modified   : 2025-08-24
+    Version         : 1.0
+    STIG-ID         : WN10-AC-000020
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
 #>
 
 # Create a temporary security template
