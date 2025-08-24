@@ -1,0 +1,59 @@
+<# 
+.SYNOPSIS
+  Remediate DISA STIG WN10-AU-000565:
+  Configure Advanced Audit Policy: Logon/Logoff -> "Audit Other Logon/Logoff Events" with "Failure" selected.
+
+.NOTES
+  - Requires Administrator.
+  - Uses auditpol.exe to configure subcategory auditing.
+#>
+
+# --- Safety: Require elevation ---
+$principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Error "This script must be run as Administrator. Right-click PowerShell and 'Run as administrator'."
+    exit 1
+}
+
+$subcategory = 'Other Logon/Logoff Events'
+
+function Get-AuditFailureEnabled {
+    param([string]$Name)
+
+    # Query current setting
+    $output = & auditpol.exe /get /subcategory:"$Name" 2>$null
+    if ($LASTEXITCODE -ne 0 -or -not $output) {
+        Write-Error "Failed to read current audit policy for subcategory: $Name"
+        return $false
+    }
+
+    # When Failure auditing is enabled, the output line typically contains 'Failure' (e.g., 'Success and Failure').
+    # When disabled, it shows 'No Auditing' or only 'Success'.
+    return ($output -match 'Failure')
+}
+
+$currentlyFailureEnabled = Get-AuditFailureEnabled -Name $subcategory
+
+if ($currentlyFailureEnabled) {
+    Write-Host "Compliant: '$subcategory' already has Failure auditing enabled."
+} else {
+    Write-Host "Noncompliant: enabling Failure auditing for '$subcategory'..."
+    & auditpol.exe /set /subcategory:"$subcategory" /failure:enable | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Failed to set Failure auditing for '$subcategory'."
+        exit 2
+    }
+
+    # Re-verify
+    if (Get-AuditFailureEnabled -Name $subcategory) {
+        Write-Host "Success: Failure auditing enabled for '$subcategory'."
+    } else
+        {
+        Write-Error "Verification failed: Failure auditing does not appear enabled for '$subcategory'."
+        exit 3
+    }
+}
+
+# Show final effective setting for traceability
+Write-Host "`nEffective setting:"
+& auditpol.exe /get /subcategory:"$subcategory"
