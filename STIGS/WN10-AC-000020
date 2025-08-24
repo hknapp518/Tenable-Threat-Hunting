@@ -1,0 +1,23 @@
+<#
+.SYNOPSIS
+  Remediates DISA STIG WN10-AC-000020 by enforcing password history.
+
+.DESCRIPTION
+  Configures "Enforce password history" to 24 passwords remembered.
+#>
+
+# Create a temporary security template
+$SecTemplate = "$env:TEMP\PwdPolicy.inf"
+
+@"
+[System Access]
+PasswordHistorySize = 24
+"@ | Out-File -FilePath $SecTemplate -Encoding ASCII -Force
+
+# Apply the security template
+secedit /configure /db secedit.sdb /cfg $SecTemplate /areas SECURITYPOLICY
+
+# Clean up
+Remove-Item $SecTemplate -Force
+
+Write-Output "STIG WN10-AC-000020 remediation complete. Password history set to 24."
