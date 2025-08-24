@@ -9,6 +9,11 @@
     Last Modified   : 2025-08-23
     Version         : 1.1
     STIG-ID         : WN10-SO-000005
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
 #>
 
 # Ensure script is run as Administrator
