@@ -12,7 +12,12 @@
     Date Created    : 2025-08-23
     Last Modified   : 2025-08-23
     Version         : 1.0
-    STIG-ID         : WN10-AU-000505
+    STIG-ID         : WN10-CC-000326
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
 #>
 
 # Ensure script runs as Administrator
