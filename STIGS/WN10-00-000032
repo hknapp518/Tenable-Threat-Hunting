@@ -1,0 +1,12 @@
+# Requires Administrator
+
+$RegPath = "HKLM:\SOFTWARE\Policies\Microsoft\FVE"
+$RegName = "MinimumPIN"
+$RegValue = 6
+
+if (-not (Test-Path $RegPath)) {
+    New-Item -Path $RegPath -Force | Out-Null
+}
+
+New-ItemProperty -Path $RegPath -Name $RegName -PropertyType DWord -Value $RegValue -Force | Out-Null
+Write-Output "BitLocker minimum startup PIN length configured to $RegValue or greater."
