@@ -1,4 +1,18 @@
-# Requires Administrator
+<#
+.SYNOPSIS
+    Ensures Accounts must be configured to require password expiration (STIG: WN10-00-000090).
+
+.DESCRIPTION
+    Configures registry to enable script block logging:
+    HKLM\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging\EnableScriptBlockLogging = 1
+
+.NOTES
+    Author          : Harrison Knapp
+    GitHub          : https://github.com/hknapp518/hknapp518
+    Date Created    : 2025-08-24
+    Last Modified   : 2025-08-24
+    Version         : 1.0
+    STIG-ID         : WN10-00-000090# Requires Administrator
 
 # Get all local, enabled user accounts
 $users = Get-WmiObject Win32_UserAccount -Filter "LocalAccount='True' AND Disabled='False'"
