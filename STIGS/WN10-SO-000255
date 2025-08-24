@@ -13,6 +13,11 @@
     Last Modified   : 2025-08-24
     Version         : 1.0
     STIG-ID         : WN10-SO-000255
+.TESTED ON
+    Date(s) Tested  : 
+    Tested By       : 
+    Systems Tested  : 
+    PowerShell Ver. : 
 # Define registry path and value
 $RegPath  = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 $ValueName = "ConsentPromptBehaviorUser"
